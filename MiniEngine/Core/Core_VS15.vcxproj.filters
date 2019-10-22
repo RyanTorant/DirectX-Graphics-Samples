@@ -351,6 +351,12 @@
     <ClCompile Include="ReadbackBuffer.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="WICTextureLoaderBuild.cpp">
+      <Filter>Source Files\Graphics\DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="WICTextureLoaderBuild12.cpp">
+      <Filter>Source Files\Graphics\DirectXTex</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -403,6 +409,9 @@
     </Filter>
     <Filter Include="Shaders\BitonicSort">
       <UniqueIdentifier>{29bbd948-3d9f-4b00-a170-52bc3e18d6ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\DirectXTex">
+      <UniqueIdentifier>{03fc5f10-f276-4aac-a8a0-a57540d98479}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

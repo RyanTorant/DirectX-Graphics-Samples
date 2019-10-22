@@ -36,6 +36,7 @@ public:
 
     void CreateTGAFromMemory( const void* memBuffer, size_t fileSize, bool sRGB );
     bool CreateDDSFromMemory( const void* memBuffer, size_t fileSize, bool sRGB );
+    bool CreateWICFromMemory( const void* memBuffer, size_t fileSize, bool sRGB );
     void CreatePIXImageFromMemory( const void* memBuffer, size_t fileSize );
 
     virtual void Destroy() override
@@ -80,6 +81,7 @@ namespace TextureManager
     const ManagedTexture* LoadFromFile( const std::wstring& fileName, bool sRGB = false );
     const ManagedTexture* LoadDDSFromFile( const std::wstring& fileName, bool sRGB = false );
     const ManagedTexture* LoadTGAFromFile( const std::wstring& fileName, bool sRGB = false );
+    const ManagedTexture* LoadWICFromFile( const std::wstring& fileName, bool sRGB = false );
     const ManagedTexture* LoadPIXImageFromFile( const std::wstring& fileName );
 
     inline const ManagedTexture* LoadFromFile( const std::string& fileName, bool sRGB = false )
@@ -96,6 +98,11 @@ namespace TextureManager
     {
         return LoadTGAFromFile(MakeWStr(fileName), sRGB);
     }
+
+	inline const ManagedTexture* LoadWICFromFile(const std::string& fileName, bool sRGB = false)
+	{
+		return LoadWICFromFile(MakeWStr(fileName), sRGB);
+	}
 
     inline const ManagedTexture* LoadPIXImageFromFile( const std::string& fileName )
     {

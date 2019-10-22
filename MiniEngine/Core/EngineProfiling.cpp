@@ -433,6 +433,10 @@ namespace EngineProfiling
         {
             Paused = !Paused;
         }
+
+		if (GameInput::IsFirstPressed(GameInput::kKey_p))
+			DrawProfiler.Bang(); // This toggles it
+
         NestedTimingTree::UpdateTimes();
     }
 

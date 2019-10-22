@@ -1,0 +1,33 @@
+﻿  stdafx.cpp
+  Composition.cpp
+  D3D12RaytracingRealTimeDenoisedAmbientOcclusion.cpp
+  Main.cpp
+  GpuKernels.cpp
+  Pathtracer.cpp
+  RaytracingAccelerationStructure.cpp
+  RaytracingSceneDefines.cpp
+  Denoiser.cpp
+  RTAO.cpp
+  Sampler.cpp
+  Scene.cpp
+  Camera.cpp
+  CameraController.cpp
+  DeviceResources.cpp
+  DXSample.cpp
+  EngineProfiling.cpp
+  GameInput.cpp
+  RTAOGpuKernels.cpp
+  GpuTimeManager.cpp
+  GpuResourceStateTracker.cpp
+  Compiling...
+  PBRTParser.cpp
+  PlyParser.cpp
+  PerformanceTimers.cpp
+  UILayer.cpp
+  Win32Application.cpp
+  EngineTuning.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 5700 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  D3D12RaytracingRealTimeDenoisedAmbientOcclusion.vcxproj -> D:\Paper\DirectX-Graphics-Samples\Samples\Desktop\D3D12Raytracing\src\D3D12RaytracingRealTimeDenoisedAmbientOcclusion\bin\x64\Release\D3D12RaytracingRealTimeDenoisedAmbientOcclusion.exe

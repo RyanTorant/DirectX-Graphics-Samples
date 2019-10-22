@@ -1,3 +1,4 @@
+#include "TextureManager.h"
 //
 // Copyright (c) Microsoft. All rights reserved.
 // This code is licensed under the MIT License (MIT).
@@ -16,6 +17,7 @@
 #include "TextureManager.h"
 #include "FileUtility.h"
 #include "DDSTextureLoader.h"
+#include "WICTextureLoader12.h"
 #include "GraphicsCore.h"
 #include "CommandContext.h"
 #include <map>
@@ -130,6 +132,23 @@ bool Texture::CreateDDSFromMemory( const void* filePtr, size_t fileSize, bool sR
         (const uint8_t*)filePtr, fileSize, 0, sRGB, &m_pResource, m_hCpuDescriptorHandle );
 
     return SUCCEEDED(hr);
+}
+
+bool Texture::CreateWICFromMemory(const void* filePtr, size_t fileSize, bool sRGB)
+{
+	std::unique_ptr<uint8_t[]> decodedData;
+	D3D12_SUBRESOURCE_DATA texResource;
+	HRESULT hr = DirectX::LoadWICTextureFromMemory(Graphics::g_Device,
+		(const uint8_t*)filePtr, fileSize, &m_pResource, decodedData, texResource);
+
+	// Transfer data to the GPU
+	CommandContext::InitializeTexture(*this, 1, &texResource);
+
+	if (m_hCpuDescriptorHandle.ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
+		m_hCpuDescriptorHandle = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	g_Device->CreateShaderResourceView(m_pResource.Get(), nullptr, m_hCpuDescriptorHandle);
+
+	return SUCCEEDED(hr);
 }
 
 void Texture::CreatePIXImageFromMemory( const void* memBuffer, size_t fileSize )
@@ -254,11 +273,14 @@ void ManagedTexture::SetToInvalidTexture( void )
 
 const ManagedTexture* TextureManager::LoadFromFile( const std::wstring& fileName, bool sRGB )
 {
+	// This should be extracting the extension from the file, come on Microsoft!
     std::wstring CatPath = fileName;
-
+	
     const ManagedTexture* Tex = LoadDDSFromFile( CatPath + L".dds", sRGB );
-    if (!Tex->IsValid())
-        Tex = LoadTGAFromFile( CatPath + L".tga", sRGB );
+	if (!Tex->IsValid())
+		Tex = LoadTGAFromFile(CatPath + L".tga", sRGB);
+	if (!Tex->IsValid())
+		Tex = LoadWICFromFile(fileName, sRGB);
 
     return Tex;
 }
@@ -308,6 +330,28 @@ const ManagedTexture* TextureManager::LoadTGAFromFile( const std::wstring& fileN
         ManTex->SetToInvalidTexture();
 
     return ManTex;
+}
+
+const ManagedTexture* TextureManager::LoadWICFromFile(const std::wstring& fileName, bool sRGB)
+{
+	auto ManagedTex = FindOrLoadTexture(fileName);
+
+	ManagedTexture* ManTex = ManagedTex.first;
+	const bool RequestsLoad = ManagedTex.second;
+
+	if (!RequestsLoad)
+	{
+		ManTex->WaitForLoad();
+		return ManTex;
+	}
+
+	Utility::ByteArray ba = Utility::ReadFileSync(s_RootPath + fileName);
+	if (ba->size() == 0 || !ManTex->CreateWICFromMemory(ba->data(), ba->size(), sRGB))
+		ManTex->SetToInvalidTexture();
+	else
+		ManTex->GetResource()->SetName(fileName.c_str());
+
+	return ManTex;
 }
 
 
